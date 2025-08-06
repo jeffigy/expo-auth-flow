@@ -9,8 +9,10 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import authStore from "@/store/useAuth";
 
 export default function RootLayout() {
+  const { isAuthenticated } = authStore();
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -29,7 +31,9 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="login" />
-        <Stack.Screen name="(protected)" />
+        <Stack.Protected guard={isAuthenticated}>
+          <Stack.Screen name="(protected)" />
+        </Stack.Protected>
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
